@@ -6157,44 +6157,26 @@ LLKsvarma <- function(par,zt=DX,Order=Order,ARlags=arlags,MAlags=malags,include.
    icnt=0
    if(include.mean){
       Ph0=beta[1,]; icnt=icnt+1
-      cat("constant term: ","\n")
-      cat("est: ",round(Ph0,4),"\n")
-      cat(" se: ",round(se.beta[1,],4),"\n")
    }
    Phi=NULL
    if(p > 0){
       Phi=t(beta[(icnt+1):(icnt+k*p),])
       sePhi=t(se.beta[(icnt+1):(icnt+k*p),])
       for (j in 1:p){
-         cat("AR(",j,") matrix","\n")
          jcnt=(j-1)*k
-         print(round(Phi[,(jcnt+1):(jcnt+k)],3))
-         cat("standard errors","\n")
-         print(round(sePhi[,(jcnt+1):(jcnt+k)],3))
       }
       icnt=icnt+k*p
       ## end of if(p > 0)
    }
    if(m > -1){
-      cat("Coefficients of exogenous","\n")
       Beta=t(beta[(icnt+1):(icnt+(m+1)*kx),])
       seBeta=t(se.beta[(icnt+1):(icnt+(m+1)*kx),])
       for (i in 0:m){
          jdx=i*kx
-         cat("lag-",i," coefficient matrix","\n")
-         print(round(Beta[,(jdx+1):(jdx+kx)],3))
-         cat("standard errors","\n")
-         print(round(seBeta[,(jdx+1):(jdx+kx)],3))
       }
       ## end of if(m > -1)
    }
    ##
-   cat("Residual Covariance Matrix","\n")
-   print(round(sig,5))
-   cat("===========","\n")
-   cat("Information criteria: ","\n")
-   cat("AIC: ",aic,"\n")
-   cat("BIC: ",bic,"\n")
    
    VARX <- list(data=zt,xt=xt,aror=p,m=m,Ph0=Ph0,Phi=Phi,beta=Beta,residuals=resi,Sigma=sig,
    coef=beta,se.coef=se.beta,include.mean=include.mean)
@@ -6274,12 +6256,8 @@ LLKsvarma <- function(par,zt=DX,Order=Order,ARlags=arlags,MAlags=malags,include.
             se=rbind(se,se1)
          }
       }
-      ### Print forecasts
-      cat("Prediction at origin: ",orig,"\n")
-      cat("Point forecasts (starting with step 1): ","\n")
-      print(round(nzt[(orig+1):(orig+hstep),],5))
-      cat("Corresponding standard errors: ","\n")
-      print(round(se[1:hstep,],5))
+      
+      list(pred=nzt[(orig+1):(orig+hstep),],se=se[1:hstep,])
       
    }
    else{
